@@ -2,10 +2,10 @@ const express = require("express");
 const app = express();
 
 app.get("/", (req, res) => {
-  res.send("Ashwin Remote is LIVE 🚀");
+  res.status(200).send("Ashwin Remote is LIVE 🚀");
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, "0.0.0.0", () => {
-  console.log("Server running on", PORT);
+  console.log("Listening on port", PORT);
 });
