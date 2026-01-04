@@ -6,21 +6,27 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-// ✅ VERY IMPORTANT: root route (fixes 502)
-app.get("/", (req, res) => {
-  res.status(200).send("Ashwin Remote is LIVE 🚀");
-});
-
-// serve static files
+// Serve static files
 app.use(express.static("public"));
 
-io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
+// ✅ IMPORTANT: root HTTP response (fixes 502)
+app.get("/", (req, res) => {
+  res.status(200).send("Ashwin Remote Server is running ✅");
 });
 
+// Socket.io connection
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
+});
+
+// Railway PORT (MANDATORY)
 const PORT = process.env.PORT || 3000;
 
-// ✅ VERY IMPORTANT: listen on 0.0.0.0
+// ✅ Listen on all interfaces
 server.listen(PORT, "0.0.0.0", () => {
-  console.log("Server running on port", PORT);
+  console.log(`Server running on port ${PORT}`);
 });
