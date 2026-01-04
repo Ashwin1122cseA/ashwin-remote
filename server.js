@@ -1,16 +1,18 @@
 const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
+
 const app = express();
-const http = require("http").createServer(app);
-const io = require("socket.io")(http);
+const server = http.createServer(app);
+const io = new Server(server);
 
 app.use(express.static("public"));
 
-io.on("connection", socket => {
-  socket.on("offer", data => socket.broadcast.emit("offer", data));
-  socket.on("answer", data => socket.broadcast.emit("answer", data));
-  socket.on("ice", data => socket.broadcast.emit("ice", data));
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
 });
 
-http.listen(3000, () => {
-  console.log("Ashwin Remote running at http://localhost:3000");
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log("Server running on port", PORT);
 });
